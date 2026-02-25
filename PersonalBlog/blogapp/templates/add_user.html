@@ -1,0 +1,51 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<div class="py-4">
+    <h1 class="text-center mb-4">Add User</h1>
+
+    <div class="row justify-content-center add-product">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="card shadow-sm p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <label>Username:</label><br>
+                    <input type="text" name="username" class="form-control" required><br>
+
+                    <label>Email:</label><br>
+                    <input type="email" name="email" class="form-control" required><br>
+
+                    <label>Role:</label>
+                    <select name="role" class="form-select" required>
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select><br>
+
+                    <label>Password:</label><br>
+                    <input type="password" name="password" class="form-control" required><br>
+
+                    <label>Confirm Password:</label><br>
+                    <input type="password" name="confirm" class="form-control" required><br>
+
+
+                    <button class="btn btn-success w-100 mt-3" type="submit">Add User</button>
+                </form>
+
+                {% if messages %}
+                <div class="mt-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
