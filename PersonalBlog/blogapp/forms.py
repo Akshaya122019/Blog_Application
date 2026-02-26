@@ -1,6 +1,8 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
+from tinymce.widgets import TinyMCE
+from .models import *
 
 ROLE_CHOICES = [
     ('admin','Admin'),
@@ -35,3 +37,28 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+
+
+class BlogForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=TinyMCE(attrs={'cols': 80, 'rows': 10})
+    )
+    class Meta:
+        model = Blog
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'url': forms.TextInput(attrs={'class': 'form-control'}),
+            'meta_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'meta_description': forms.TextInput(attrs={'class': 'form-control'}),
+            'author': forms.TextInput(attrs={'class': 'form-control'}),
+            'thumbnail': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'author_image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+        }

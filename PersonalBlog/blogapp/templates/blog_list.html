@@ -1,0 +1,29 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="card border-0 shadow-sm">
+        <table class="table table-striped">
+            <tr>
+                <th>S.No</th>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Actions</th>
+            </tr>
+            {% for blog in blogs %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                {% if blog.thumbnail %}
+                <td>
+                    <img src="{{ blog.thumbnail.url }}" width="50" class="rounded-circle">
+                </td>
+                {% endif %}
+                <td>{{blog.title}}</td>
+                <td>{{blog.author}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

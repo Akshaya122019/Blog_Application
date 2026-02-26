@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
+from .forms import *
 
 # Create your views here.
 @login_required
@@ -97,7 +98,7 @@ def update_user(request, user_id):
         return redirect('user')
     return render(request, 'update_user.html', {'user': user, 'user_role': current_role})
 
-
+@login_required
 def delete_user(request, user_id):
     if not request.user.groups.filter(name='Admin').exists():
         return HttpResponseForbidden("You are not authorized to access this page.")
@@ -106,3 +107,27 @@ def delete_user(request, user_id):
     user.delete()
     messages.success(request, 'User deleted successfully')
     return redirect('user')
+
+@login_required
+def Add_Blog(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Blog added successfully")
+            return redirect('blog_list')
+        else:
+            messages.error(request,"Something wrong")
+    else:
+        form = BlogForm()
+    return render(request,"add_blog.html", {'form':form})
+
+@login_required
+def Blog_list(request):
+    blogs = Blog.objects.all().order_by('-created_at')
+    return render(request, 'blog_list.html', {'blogs':blogs})
+
+@login_required
+def Blogs(request):
+    blogs = Blog.objects.all().order_by('-created_at')
+    return render(request, 'blogs.html', {'blogs':blogs})

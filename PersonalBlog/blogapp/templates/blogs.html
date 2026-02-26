@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Posts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .blog-title-font {
+            font-family: 'Merriweather', serif;
+        }
+
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10) !important;
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .author-img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+        }
+
+        .read-more-btn {
+            transition: background-color 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Header -->
+    <div class="bg-white border-bottom py-5">
+        <div class="container">
+            <p class="text-uppercase text-primary fw-semibold small letter-spacing mb-1" style="letter-spacing:0.12em">
+                Our Journal</p>
+            <h1 class="blog-title-font fw-bold fs-2 mb-2">Latest Blog Posts</h1>
+            <p class="text-secondary mb-0">Stories, insights and ideas worth sharing.</p>
+        </div>
+    </div>
+
+    <!-- Blog Grid -->
+    <div class="container py-5">
+        <div class="row g-4">
+
+            {% for blog in blogs %}
+            <!-- Card 1 -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    {% if blog.thumbnail %}
+                    <img src="{{blog.thumbnail.url}}" alt="Blog Cover" class="card-img-top rounded-top-3" />
+                    {% endif %}
+                    <div class="card-body d-flex flex-column p-4">
+                        <!-- Author + Date -->
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                {% if blog.author_image %}
+                                <img src="{{blog.author_image.url}}" alt="Author"
+                                    class="author-img rounded-circle border border-2 border-white shadow-sm" />
+                                {% endif %}
+                                <span class="fw-medium small text-dark">{{blog.author}}</span>
+                            </div>
+                            <span class="text-secondary small">{{blog.created_at}}</span>
+                        </div>
+                        <!-- Title -->
+                        <h5 class="blog-title-font fw-bold text-dark mb-2 lh-sm">{{blog.title}}</h5>
+                        <!-- Description -->
+                        <p class="text-secondary small lh-lg flex-grow-1">{{blog.description}}</p>
+                        <!-- Read More -->
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-3 align-self-start px-4 read-more-btn">Read
+                            More →</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div><!-- /row -->
+
+        <!-- Pagination -->
+
+
+    </div><!-- /container -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

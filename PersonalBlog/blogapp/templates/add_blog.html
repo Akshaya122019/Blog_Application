@@ -1,0 +1,69 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4 my-5">
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+    <div class="text-center">
+        <h3 class="text-center mb-4">Add Blog</h3>
+    </div>
+    <div class="card p-4 border-0 shadow-sm">
+
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            <div class="row">
+                <div class="col-md-4 p-3">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.url.label_tag }}
+                    {{ form.url }}
+                </div>
+
+                <div class="col-md-4 p-3">
+                    {{ form.thumbnail.label_tag }}
+                    {{ form.thumbnail }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.meta_title.label_tag }}
+                    {{ form.meta_title }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.meta_description.label_tag }}
+                    {{ form.meta_description }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.author.label_tag }}
+                    {{ form.author }}
+                </div>
+                <div class="col-md-4 p-3">
+                    {{ form.author_image.label_tag }}
+                    {{ form.author_image }}
+                </div>
+
+                <div class="col-md-12 mt-3 p-3">
+                    {{ form.content.label_tag }}
+                    {{ form.content }}
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary mt-4">
+                    Save Blog
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
