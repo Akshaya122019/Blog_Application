@@ -1,0 +1,58 @@
+{% extends 'app.html' %}
+
+{% block section %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 mb-4">
+                <h3>Table of Content</h3>
+                <ul class="toc-list"></ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <img src="{{ blog.thumbnail.url }}" alt="{{blog.title}}" class="img-fluid">
+                <div class="card-body">
+                    <img src="{{ blog.author_image.url }}" width="50" height="50" class="rounded-circle me-2">
+                    <strong>{{ blog.author }}</strong>
+                    <div class="mt-3" id="blog_content">
+                        {{ blog.content|safe}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const content = document.getElementById("blog-content");
+    const tocList = document.getElementById("toc-list");
+
+    const headings = content.querySelectorAll("h1, h2");
+
+    headings.forEach((heading, index) => {
+        const id = "heading-" + index;
+        heading.setAttribute("id", id);
+
+        const li = document.createElement("li");
+
+        if (heading.tagName === "H2") {
+            li.style.marginLeft = "20px";
+        }
+
+        const a = document.createElement("a");
+        a.href = "#" + id;
+        a.innerText = heading.innerText;
+        a.style.textDecoration = "none";
+
+        li.appendChild(a);
+        tocList.appendChild(li);
+    });
+});
+</script>
+{% endblock %}
+

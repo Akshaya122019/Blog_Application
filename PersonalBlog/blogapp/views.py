@@ -131,3 +131,8 @@ def Blog_list(request):
 def Blogs(request):
     blogs = Blog.objects.all().order_by('-created_at')
     return render(request, 'blogs.html', {'blogs':blogs})
+
+@login_required
+def blog_detail(request,slug):
+    blog = Blog.objects.get(url=slug)
+    return render(request, "blog_detail.html", {'blog':blog})

@@ -15,5 +15,6 @@ urlpatterns = [
     path('add_blog',views.Add_Blog, name='add_blog'),
     path('blog_list',views.Blog_list, name='blog_list'),
     path('blogs',views.Blogs, name='blogs'),
+    path('blog/<slug:slug>',views.blog_detail, name='blog_detail'),
    
 ]

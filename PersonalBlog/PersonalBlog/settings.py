@@ -128,6 +128,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '100%',
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 20,
+    'plugins': 'toc',
+    'toolbar': 'toc',
 }
 
 MEDIA_URL = '/media/'
