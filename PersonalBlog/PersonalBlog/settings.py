@@ -128,8 +128,18 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '100%',
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 20,
-    'plugins': 'toc',
-    'toolbar': 'toc',
+    "plugins": "advlist autolink lists link image charmap preview anchor "
+               "searchreplace visualblocks code fullscreen "
+               "insertdatetime media table help wordcount toc",
+
+    "toolbar": "undo redo | blocks | "
+               "bold italic underline | "
+               "alignleft aligncenter alignright alignjustify | "
+               "bullist numlist outdent indent | "
+               "link image table | "
+               "code fullscreen | toc",
+
+    "block_formats": "Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3",
 }
 
 MEDIA_URL = '/media/'

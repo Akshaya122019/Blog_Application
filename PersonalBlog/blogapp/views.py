@@ -136,3 +136,29 @@ def Blogs(request):
 def blog_detail(request,slug):
     blog = Blog.objects.get(url=slug)
     return render(request, "blog_detail.html", {'blog':blog})
+
+@login_required
+def Blog_Edit(request, sid):
+    blog = Blog.objects.get(id=sid)
+
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            form.save()
+            return redirect('blog_list')
+    else:
+        form = BlogForm(instance=blog)
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'add_blog.html', context)
+
+@login_required
+def Blog_Delete(request, sid):
+    blog = Blog.objects.get(id=sid)
+    blog.delete()
+    messages.success(request, 'Product Deleted Successfully')
+    return redirect('blog_list')
+

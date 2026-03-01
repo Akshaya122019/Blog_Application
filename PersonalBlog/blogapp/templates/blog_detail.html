@@ -1,13 +1,13 @@
 {% extends 'app.html' %}
-
+{% load static %}
 {% block section %}
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-3 mb-4">
+            <div class="card border-0 shadow-sm p-3 mb-4 position-sticky" style="top: 20px;">
                 <h3>Table of Content</h3>
-                <ul class="toc-list"></ul>
+                <ul id="toc-list" style="list-style-type: none;"></ul>
             </div>
         </div>
         <div class="col-md-8">
@@ -28,29 +28,77 @@
 {% endblock %}
 {% block scripts %}
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const content = document.getElementById("blog-content");
-    const tocList = document.getElementById("toc-list");
+$(document).ready(function () {
 
-    const headings = content.querySelectorAll("h1, h2");
+    const $content = $("#blog_content");
+    const $tocList = $("#toc-list");
 
-    headings.forEach((heading, index) => {
-        const id = "heading-" + index;
-        heading.setAttribute("id", id);
+    let h1Count = 0;
+    let h2Count = 0;
 
-        const li = document.createElement("li");
+    $content.find("h1, h2").each(function () {
 
-        if (heading.tagName === "H2") {
-            li.style.marginLeft = "20px";
+        let tag = this.tagName;
+        let text = $(this).text();
+        let id;
+
+        if (tag === "H1") {
+            h1Count++;
+            h2Count = 0;
+            id = "heading-" + h1Count;
+            text = h1Count + ". " + text;
         }
 
-        const a = document.createElement("a");
-        a.href = "#" + id;
-        a.innerText = heading.innerText;
-        a.style.textDecoration = "none";
+        if (tag === "H2") {
+            h2Count++;
+            id = "heading-" + h1Count + "-" + h2Count;
+            text = h1Count + "." + h2Count + " " + text;
+        }
 
-        li.appendChild(a);
-        tocList.appendChild(li);
+        $(this).attr("id", id);
+
+        const $li = $("<li>").addClass("mb-1");
+
+        if (tag === "H2") {
+            $li.addClass("ms-3");
+        }
+
+        const $a = $("<a>", {
+            href: "#" + id,
+            text: text,
+            class: "toc-link text-decoration-none d-block py-1"
+        });
+
+        $li.append($a);
+        $tocList.append($li);
+    });
+
+});
+
+// Smooth Scroll
+$(document).on("click", ".toc-link", function (e) {
+    e.preventDefault();
+
+    const target = $(this.hash);
+
+    $("html, body").animate({
+        scrollTop: target.offset().top - 80
+    }, 400);
+});
+
+// Active Highlight While Scrolling
+$(window).on("scroll", function () {
+
+    let scrollPos = $(document).scrollTop();
+
+    $("#blog_content h1, #blog_content h2").each(function () {
+
+        let currLink = $('.toc-link[href="#' + this.id + '"]');
+
+        if ($(this).offset().top - 100 <= scrollPos) {
+            $(".toc-link").removeClass("active");
+            currLink.addClass("active");
+        }
     });
 });
 </script>
