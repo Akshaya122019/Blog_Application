@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.Dashboard,name='dashboard'),
+    path('login/admin',views.Dashboard,name='dashboard'),
     
     path('login/',views.LoginView,name='login'),
     path('logout',views.LogoutUser, name='logout'),
@@ -14,10 +14,14 @@ urlpatterns = [
 
     path('add_blog',views.Add_Blog, name='add_blog'),
     path('blog_list',views.Blog_list, name='blog_list'),
-    path('blogs',views.Blogs, name='blogs'),
+    path('',views.Blogs, name='blogs'),
     path('blog/<slug:slug>',views.blog_detail, name='blog_detail'),
     path('blog_edit/<int:sid>',views.Blog_Edit, name='blog_edit'),
     path('blog_delete/<int:sid>',views.Blog_Delete, name='blog_delete'),
+
+    path("export/csv/", views.export_csv, name="export_csv"),
+    path("export/excel/", views.export_excel, name="export_excel"),
+    path("export/pdf/", views.export_pdf, name="export_pdf"),
 
    
 ]

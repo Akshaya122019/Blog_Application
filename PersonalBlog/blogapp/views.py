@@ -1,10 +1,16 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden,HttpResponse
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .models import*
+from django.db.models import Q
+from django.core.paginator import Paginator
+import csv
+from openpyxl import Workbook
+from reportlab.pdfgen import canvas
 
 # Create your views here.
 @login_required
@@ -124,8 +130,21 @@ def Add_Blog(request):
 
 @login_required
 def Blog_list(request):
+    search_query = request.GET.get("q", "")
     blogs = Blog.objects.all().order_by('-created_at')
-    return render(request, 'blog_list.html', {'blogs':blogs})
+    if search_query:
+        blogs = blogs.filter(
+            Q(title__icontains=search_query) |
+            Q(content__icontains=search_query) |
+            Q(author__icontains=search_query)
+        )
+    paginator = Paginator(blogs, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'blog_list.html', {
+        'page_obj':page_obj,
+        'search_query':search_query,
+        'blogs':blogs})
 
 @login_required
 def Blogs(request):
@@ -162,3 +181,46 @@ def Blog_Delete(request, sid):
     messages.success(request, 'Product Deleted Successfully')
     return redirect('blog_list')
 
+@login_required
+def export_csv(requset):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="blogs.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID','Title','Author','Description'])
+    
+    for blog in Blog.objects.all():
+        writer.writerow([blog.id, blog.title, blog.author, blog.description])
+    return response
+
+def export_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Blogs"
+
+    ws.append(["ID", "Author", "Title", "Description"])
+
+    for blog in Blog.objects.all():
+        ws.append([blog.id, blog.title, blog.author, blog.description])
+
+    response = HttpResponse(
+        content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=blogs.xlsx"
+
+    wb.save(response)
+    return response
+
+def export_pdf(request):
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=blogs.pdf"
+
+    p = canvas.Canvas(response)
+    y = 800
+
+    for blog in Blog.objects.all():
+        p.drawString(100, y, f"{blog.id} - {blog.title} - {blog.author}")
+        y -= 20
+
+    p.save()
+    return response

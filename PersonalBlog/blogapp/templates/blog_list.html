@@ -2,6 +2,24 @@
 {% load static %}
 {% block content %}
 <div class="container">
+    <div class="row p-3">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <a href="{% url 'export_csv' %}" class="btn btn-success btn-sm">CSV</a>
+                <a href="{% url 'export_excel' %}" class="btn btn-warning btn-sm">Excel</a>
+                <a href="{% url 'export_pdf' %}" class="btn btn-danger btn-sm">PDF</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search blog..."
+                        value="{{ search_query }}">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="card border-0 shadow-sm">
         <table class="table table-striped">
             <tr>
@@ -22,12 +40,45 @@
                 <td>{{blog.title}}</td>
                 <td>{{blog.author}}</td>
                 <td>
-                    <a href="{% url 'blog_edit' blog.id %}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="{% url 'blog_delete' blog.id %}" class="text-white btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');"><i class="fa-solid fa-trash"></i></a>
+                    <a href="{% url 'blog_edit' blog.id %}" class="btn btn-warning"><i
+                            class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="{% url 'blog_delete' blog.id %}" class="text-white btn btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this product?');"><i
+                            class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>
             {% endfor %}
         </table>
     </div>
+
+    <nav class="p-3">
+        <ul class="pagination text-center">
+
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ search_query }}&page={{ page_obj.previous_page_number }}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?q={{ search_query }}&page={{ num }}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ search_query }}&page={{ page_obj.next_page_number }}">
+                    Next
+                </a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
 </div>
 {% endblock %}
